@@ -9,31 +9,7 @@
 	#map_canvas {height:80%}
 </style>
 
-</head>
-<body onload="initGMap()">
-<!--
-Client apps for GeoTracker:
 
-Purpose: Runs on device that person wishes to use as tracking device.
-
-(1)Uses HTML5 Geolocation API to capture GPS.
-(2)When there is an update on Geolocation, it sends coords to WebSocket Server
-Optional(3) displays map in realtime.
-
-Problems: 
-How to determine when device has data connection?
-A: Can I use the WebSocket connection to identify connection?
-- If now WebSocket connection, assume no data connection
-
-What to do when there is no data connection?
-A: store coords locally in DOM then post to WebSocket Server once data connection is established.	
-
-
- -->
-<span id="btn_enable" class="button" onclick="startTracking()">Enable Tracking</span>
-<span id="btn_disable" class="button" onclick="stopTracking()">Disable Tracking</span>
-<span id="status_data" class="status" onclick="wsConnect()">Data Connection Status (online/offine)</span>
-<div id="output_coords" style="display:none;"></div>
 <script type="text/javascript">
 	// used to track if there is a data connection
 	var _dataOn = false;
@@ -134,9 +110,8 @@ A: store coords locally in DOM then post to WebSocket Server once data connectio
 		updateMap(coordsJSON.lat,coordsJSON.long,coordsJSON.timestamp);
 	}
 </script>
-<div id="map_canvas"><
 
-</div>
+
 <script type="text/javascript">
 var firstUpdate=true;
 var poly; //holds polylines
@@ -183,6 +158,20 @@ function updateMap(lat,long,tstamp){
 	console.log("Map Updated: added new marker");
 }
 </script>
+
+
+</head>
+<body onload="initGMap()">
+
+<span id="btn_enable" class="button" onclick="startTracking()">Enable Tracking</span>
+<span id="btn_disable" class="button" onclick="stopTracking()">Disable Tracking</span>
+<span id="status_data" class="status" onclick="wsConnect()">Data Connection Status (online/offine)</span>
+<div id="output_coords" style="display:none;"></div>
+
+<div id="map_canvas"><
+
+</div>
+
 </body>
 </head>
 </html>
