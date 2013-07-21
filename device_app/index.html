@@ -59,56 +59,6 @@
 		wsSendCoords(_curCoordsJSON);
 	}
 
-
-/**
-	WebSocket Functions
-*/
-
-	// function to start WebSOcket connection
-	var _WSHOST_="";
-	var _WSPORT_=8001;
-	var _ws;	
-	// tracks state of dsta connection
-	var _wsConnected=false;
-	// tracks if there are pending offline updates
-	var _pendingUpdates=false;
-	
-	// array to hold pendingUpdates
-	var _pendingCoords=[];
-	function wsConnect(){
-		ws = new WebSocket("ws://"+_WSHOST_+":"+_WSPORT_);
-		// when ws connection is opened
-		ws.onopen = function (){
-			console.log("ws established");
-			_wsConnected=true;
-			// tell ws i'm a client (tracker)
-			ws.send(JSON.stringify({type:"connect",peerType:"client"})); 
-		};
-
-		// when ws connection is closed
-		ws.onclose = function(event){
-			console.log("ws closed");
-			_wsConnected=false;
-		};
-	}
-	
-	// function to senddata
-	function wsSendCoords(coordsJSON){
-		// Check if there is a data connection
-		// if no data connection store in DOM
-		// if data connection push to WebSocket
-
-		if(_wsConnected){
-			var JSONobj = {type:"update",coords:coordsJSON};
-			console.log("Send Update to Server:"+JSON.stringify(JSONobj));
-			ws.send(JSON.stringify(JSONobj));
-		} else {
-			console.log("Offine. Push update to pending list");
-			_pendingCoords.push(coordsJSON);
-			console.log("# of updates pending: "+_pendingCoords.length);
-		}
-		updateMap(coordsJSON.lat,coordsJSON.long,coordsJSON.timestamp);
-	}
 </script>
 
 
