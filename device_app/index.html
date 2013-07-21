@@ -125,14 +125,25 @@ function initGMap(){
 
 function mapSetup(lat,long){
 	
+	 total_km = 0;
+
+	for(i = 0; i < data.length; i++){
+	    
+	    if(i == (data.length - 1)){
+	        break;
+	    }
+	    
+	    total_km += gps_distance(data[i].coords.latitude, data[i].coords.longitude, data[i+1].coords.latitude, data[i+1].coords.longitude);
+	}
 	total_km_rounded = total_km.toFixed(2);
 	
-	var myLatLng = new google.maps.LatLng(data[0].coords.latitude, data[0].coords.longitude);
+	
+	var firstLoc = new google.maps.LatLng(data[0].coords.latitude, data[0].coords.longitude);
 
 	// Google Map options
       var myOptions = {
       zoom: 15,
-      center: myLatLng,
+      center: firstLoc,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
@@ -152,22 +163,12 @@ function mapSetup(lat,long){
       strokeColor: "#FF0000",
       strokeOpacity: 1.0,
       strokeWeight: 2
+      
     });
 
     // Apply the line to the map
     poly.setMap(map);
-    
-    total_km = 0;
-
-	for(i = 0; i < data.length; i++){
-	    
-	    if(i == (data.length - 1)){
-	        break;
-	    }
-	    
-	    total_km += gps_distance(data[i].coords.latitude, data[i].coords.longitude, data[i+1].coords.latitude, data[i+1].coords.longitude);
-	}
-    
+     
     
     
     	/*console.log("setting up map");
