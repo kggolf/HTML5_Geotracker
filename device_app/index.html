@@ -124,7 +124,53 @@ function initGMap(){
 }
 
 function mapSetup(lat,long){
-	console.log("setting up map");
+	
+	total_km_rounded = total_km.toFixed(2);
+	
+	var myLatLng = new google.maps.LatLng(data[0].coords.latitude, data[0].coords.longitude);
+
+	// Google Map options
+      var myOptions = {
+      zoom: 15,
+      center: myLatLng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    // Create the Google Map, set options
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+    var trackCoords = [];
+    
+    // Add each GPS entry to an array
+    for(i=0; i<data.length; i++){
+    	trackCoords.push(new google.maps.LatLng(data[i].coords.latitude, data[i].coords.longitude));
+    }
+    
+    // Plot the GPS entries as a line on the Google Map
+    poly = new google.maps.Polyline({
+      path: trackCoords,
+      strokeColor: "#FF0000",
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+    });
+
+    // Apply the line to the map
+    poly.setMap(map);
+    
+    total_km = 0;
+
+	for(i = 0; i < data.length; i++){
+	    
+	    if(i == (data.length - 1)){
+	        break;
+	    }
+	    
+	    total_km += gps_distance(data[i].coords.latitude, data[i].coords.longitude, data[i+1].coords.latitude, data[i+1].coords.longitude);
+	}
+    
+    
+    
+    	/*console.log("setting up map");
 	var firstLoc = new google.maps.LatLng(lat,long);
 	var myOptions = {
 		zoom: 13,
@@ -140,7 +186,7 @@ function mapSetup(lat,long){
 		stroekWeight: 3
 	}
 	poly = new google.maps.Polyline(polyOptions);
-	poly.setMap(map);
+	poly.setMap(map);*/
 }	
 
   
@@ -159,6 +205,25 @@ function updateMap(lat,long,tstamp){
 	});
 	console.log("Map Updated: added new marker");
 }
+
+function gps_distance(lat1, lon1, lat2, lon2)
+{
+	// http://www.movable-type.co.uk/scripts/latlong.html
+    var R = 6371; // km
+    var dLat = (lat2-lat1) * (Math.PI / 180);
+    var dLon = (lon2-lon1) * (Math.PI / 180);
+    var lat1 = lat1 * (Math.PI / 180);
+    var lat2 = lat2 * (Math.PI / 180);
+
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var d = R * c;
+    
+    return d;
+    
+}
+
 </script>
 
 
